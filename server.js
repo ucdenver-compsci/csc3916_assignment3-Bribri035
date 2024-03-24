@@ -95,6 +95,7 @@ router.route('/movies')
             res = res.type(req.get('Content-Type'));
         }
         var o = getJSONObjectForMovieRequirement(req);
+        
         o.status = 200;
         o.message = "GET movies";
         o.query = o.body;
@@ -109,11 +110,26 @@ router.route('/movies')
             res = res.type(req.get('Content-Type'));
         }
         var o = getJSONObjectForMovieRequirement(req);
-        o.status = 200;
-        o.message = "movie saved";
-        o.query = o.body;
-        o.env = o.key;
-        res.json(o);
+        if (!o.actors) {
+            return res.status(400).send({success: false, msg: 'Movie needs actors'});
+        }
+        else{
+            var move = new Movie()
+            move.title=o.title;
+            move.releaseDate=o.releaseDate;
+            move.genre=o.genre;
+            move.actors=o.actors;
+            move.save(function(err)){
+                if (err) {
+                        return res.json(err);
+                }
+            }
+            o.status = 200;
+            o.message = "movie saved";
+            o.query = o.body;
+            o.env = o.key;
+            return res.json(o);
+        }
     }    
     )
     .delete(authController.isAuthenticated, (req, res) => {
