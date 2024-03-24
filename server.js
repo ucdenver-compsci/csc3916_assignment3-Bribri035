@@ -110,7 +110,7 @@ router.route('/movies')
             res = res.type(req.get('Content-Type'));
         }
         var o = getJSONObjectForMovieRequirement(req);
-        if (!o.actors) {
+        if (o.actors=="") {
             return res.status(400).send({success: false, msg: 'Movie needs actors'});
         }
         else{
@@ -119,16 +119,16 @@ router.route('/movies')
             move.releaseDate=o.releaseDate;
             move.genre=o.genre;
             move.actors=o.actors;
-            move.save(function(err)){
+            move.save(function(err){
                 if (err) {
                         return res.json(err);
                 }
-            }
+            });
             o.status = 200;
             o.message = "movie saved";
             o.query = o.body;
             o.env = o.key;
-            return res.json(o);
+            res.json(o);
         }
     }    
     )
