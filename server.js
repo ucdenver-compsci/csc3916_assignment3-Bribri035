@@ -149,13 +149,8 @@ router.route('/movies')
             o.message = "movie deleted";
             res.json(o);
 
-        }
-
-        
-        
-    }
-
-    )
+        }) 
+    })
     .put(authJwtController.isAuthenticated, (req, res) => {
         console.log(req.body);
         //es = res.status(200);
